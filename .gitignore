@@ -16,7 +16,7 @@
 # next.js
 /.next/
 /out/
-
+/convex/auth.config.ts
 # production
 /build
 
