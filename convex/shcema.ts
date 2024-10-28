@@ -7,6 +7,7 @@ export default defineSchema({
     }),
     product: defineTable({
             name: v.string(),
-            price: v.number(),
     })
 })
+
+
