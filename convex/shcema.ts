@@ -1,13 +1,14 @@
 import {defineSchema, defineTable} from 'convex/server'
 import { v } from 'convex/values'
 export default defineSchema({
-    task:defineTable({
-        text: v.string(),
-        complete: v.boolean() 
-    }),
-    product: defineTable({
-            name: v.string(),
-    })
+    users: defineTable({
+		name: v.optional(v.string()),
+		email: v.string(),
+		image: v.string(),
+		tokenIdentifier: v.string(),
+		isOnline: v.boolean(),
+	})
+
 })
 
 
