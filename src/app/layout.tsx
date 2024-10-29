@@ -4,6 +4,7 @@ import "./globals.css";
 import { Provider } from "./provider/Provider";
 import { SignedOut } from "@clerk/nextjs";
 import LandingPage from "@/components/home/landingpage";
+import { Suspense } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,6 +32,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Suspense>
+
         <Provider>
           <SignedOut>
             
@@ -38,6 +41,7 @@ export default function RootLayout({
           </SignedOut>
           {children}
         </Provider>
+        </Suspense>
       </body>
     </html>
   );

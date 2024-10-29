@@ -12,7 +12,7 @@ http.route({
 		const headerPayload = req.headers;
 
 		try {
-			const response = await ctx.runAction(internal.clerk.fulfill, {
+			const result = await ctx.runAction(internal.clerk.fulfill, {
 				payload: payloadString,
 				headers: {
 					"svix-id": headerPayload.get("svix-id")!,
@@ -20,33 +20,33 @@ http.route({
 					"svix-timestamp": headerPayload.get("svix-timestamp")!,
 				},
 			});
-            switch (response.type) {
+
+			switch (result.type) {
 				case "user.created":
 					await ctx.runMutation(internal.users.createUser, {
-						tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${response.data.id}`,
-						email: response.data.email_addresses[0]?.email_address,
-						name: `${response.data.first_name ?? "Guest"} ${response.data.last_name ?? ""}`,
-						image: response.data.image_url,
+						tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${result.data.id}`,
+						email: result.data.email_addresses[0]?.email_address,
+						name: `${result.data.first_name ?? "Guest"} ${result.data.last_name ?? ""}`,
+						image: result.data.image_url,
 					});
 					break;
 				// case "user.updated":
 				// 	await ctx.runMutation(internal.users.updateUser, {
-				// 		tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${response.data.id}`,
-				// 		image: response.data.image_url,
+				// 		tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${result.data.id}`,
+				// 		image: result.data.image_url,
 				// 	});
 				// 	break;
 				// case "session.created":
 				// 	await ctx.runMutation(internal.users.setUserOnline, {
-				// 		tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${response.data.user_id}`,
+				// 		tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${result.data.user_id}`,
 				// 	});
 				// 	break;
-				// case "session.ended":
-				// 	await ctx.runMutation(internal.users.setUserOffline, {
-				// 		tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${response.data.user_id}`,
-				// 	});
-				// 	break;
+				case "session.ended":
+					await ctx.runMutation(internal.users.setUserOffline, {
+						tokenIdentifier: `${process.env.CLERK_APP_DOMAIN}|${result.data.user_id}`,
+					});
+					break;
 			}
-
 			return new Response(null, {
 				status: 200,
 			});
@@ -60,4 +60,3 @@ http.route({
 });
 
 export default http;
-
