@@ -19,7 +19,9 @@ export const createUser = internalMutation({
     },
 });
 
-export const setUserOff = internalMutation({
+
+
+export const setUserOffline = internalMutation({
     args: {
         tokenIdentifier: v.string(),
     },
@@ -30,9 +32,12 @@ export const setUserOff = internalMutation({
         if (!user) {
             throw new ConvexError("User not found!");
         }
-        await ctx.db.patch(user._id, { isOnline: false });
+        await ctx.db.patch(user._id, {isOnline:false});
     },
 });
+
+
+
 export const setUserOnline = internalMutation({
     args: {
         tokenIdentifier: v.string(),
