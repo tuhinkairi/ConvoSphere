@@ -1,6 +1,8 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation } from "./_generated/server";
+import { internalMutation, query } from "./_generated/server";
 
+
+// session created
 export const createUser = internalMutation({
     args: {
         tokenIdentifier: v.string(),
@@ -20,7 +22,7 @@ export const createUser = internalMutation({
 });
 
 
-
+// session removed logoff
 export const setUserOffline = internalMutation({
     args: {
         tokenIdentifier: v.string(),
@@ -37,7 +39,7 @@ export const setUserOffline = internalMutation({
 });
 
 
-
+// session created when login
 export const setUserOnline = internalMutation({
     args: {
         tokenIdentifier: v.string(),
@@ -51,6 +53,8 @@ export const setUserOnline = internalMutation({
         await ctx.db.patch(user._id, { isOnline: true });
     },
 });
+
+// update the pic
 export const updateUser = internalMutation({
 	args: { tokenIdentifier: v.string(), image: v.string() },
 	async handler(ctx, args) {
@@ -68,3 +72,35 @@ export const updateUser = internalMutation({
 		});
 	},
 });
+
+// getting all users if login
+const getUsers = query({
+    args:{},
+    handler:async(ctx,args)=>{
+        const user = await ctx.auth.getUserIdentity()
+        if (!user) {
+            throw new ConvexError("Unauthorized")
+        }
+        const all_users = await ctx.db.query("users").collect()
+        return all_users
+    }   
+})
+// getting profile
+const getProfile = query({
+    args:{},
+    handler:async(ctx,args)=>{
+        // getting the user key to locate
+        const user = await ctx.auth.getUserIdentity()
+        if (!user) {
+            throw new ConvexError("Unauthorized")
+        }
+        const profile = await ctx.db.query("users").withIndex('bytokenIdentifier',(q)=>q.eq('tokenIdentifier', user.tokenIdentifier)).unique()
+        
+        if (profile) throw new ConvexError('user not found')
+            
+        return profile
+    }   
+})
+
+
+
