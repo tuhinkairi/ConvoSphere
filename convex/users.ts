@@ -74,7 +74,7 @@ export const updateUser = internalMutation({
 });
 
 // getting all users if login
-const getUsers = query({
+export const getUsers = query({
     args:{},
     handler:async(ctx,args)=>{
         const user = await ctx.auth.getUserIdentity()
@@ -86,7 +86,7 @@ const getUsers = query({
     }   
 })
 // getting profile
-const getProfile = query({
+export const getMe = query({
     args:{},
     handler:async(ctx,args)=>{
         // getting the user key to locate
@@ -96,9 +96,9 @@ const getProfile = query({
         }
         const profile = await ctx.db.query("users").withIndex('bytokenIdentifier',(q)=>q.eq('tokenIdentifier', user.tokenIdentifier)).unique()
         
-        if (profile) throw new ConvexError('user not found')
+        if (!profile) throw new ConvexError('user not found')
             
-        return profile
+        return profile;
     }   
 })
 
