@@ -16,6 +16,8 @@ import { ImageIcon, MessageSquareDiff } from "lucide-react";
 import { Id } from "../../../convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { DialogClose } from "@radix-ui/react-dialog";
+import toast from "react-hot-toast";
 
 const UserListDialog = () => {
 	const [selectedUsers, setSelectedUsers] = useState<Id<"users">[]>([]);
@@ -24,20 +26,17 @@ const UserListDialog = () => {
 	const [selectedImage, setSelectedImage] = useState<File | null>(null);
 	const [renderedImage, setRenderedImage] = useState("");
 	const imgRef = useRef<HTMLInputElement>(null);
+	const dialogCloseRef = useRef<HTMLInputElement>(null);
 
 	// Initialize hooks outside conditional blocks
 	const createConversation = useMutation(api.conversations.createConversation);
-	const users = useQuery(api.users.getUsers);
-	const me = useQuery(api.users.getMe);
 	const generateUploadUrl = useMutation(api.conversations.generateUploadUrl);
 
-	// Image rendering
-	useEffect(() => {
-		if (!selectedImage) return setRenderedImage("");
-		const reader = new FileReader();
-		reader.onload = (e) => setRenderedImage(e.target?.result as string);
-		reader.readAsDataURL(selectedImage);
-	}, [selectedImage]);
+	// fetching all users 
+	const users = useQuery(api.users.getUsers);
+	// fetching the user initiate the task
+	const me = useQuery(api.users.getMe);
+
 
 	// Handle conversation creation
 	const handelCreateConversation = async () => {
@@ -54,26 +53,39 @@ const UserListDialog = () => {
 				const postUrl = await generateUploadUrl();
 				const result = await fetch(postUrl, {
 					method: "POST",
-					headers: {
-						"Content-Type": selectedImage?.type,
-					},
+					headers: { "Content-Type": selectedImage?.type, },
 					body: selectedImage,
 				});
 				const { storageId } = await result.json();
 				await createConversation({
-					participents: [...selectedUsers, me?._id],
+					participents: [...selectedUsers, me?._id!],
 					isGroup: true,
 					groupName,
 					admin: me?._id!,
 					groupImage: storageId,
 				});
 			}
+			dialogCloseRef.current?.click;
+			setGroupName('')
+			setSelectedUsers([])
+			setSelectedImage(null)
+
+			// todo update the chat section next for show on the left pannel
+
 		} catch (error) {
+			toast('opps something went wrong')
 			console.log(error);
 		} finally {
 			setIsLoading(false);
 		}
 	};
+	// Image rendering
+	useEffect(() => {
+		if (!selectedImage) return setRenderedImage("");
+		const reader = new FileReader();
+		reader.onload = (e) => setRenderedImage(e.target?.result as string);
+		reader.readAsDataURL(selectedImage);
+	}, [selectedImage]);
 
 	return (
 		<Dialog>
@@ -83,6 +95,7 @@ const UserListDialog = () => {
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>USERS</DialogTitle>
+					<DialogClose ref={dialogCloseRef} />
 				</DialogHeader>
 				<DialogDescription>Start a new chat</DialogDescription>
 				{renderedImage && (

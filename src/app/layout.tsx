@@ -5,6 +5,7 @@ import { Provider } from "./provider/Provider";
 import { SignedOut } from "@clerk/nextjs";
 import LandingPage from "@/components/home/landingpage";
 import { Suspense } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,6 +41,7 @@ export default function RootLayout({
             <LandingPage />
           </SignedOut>
           {children}
+          <Toaster />
         </Provider>
         </Suspense>
       </body>

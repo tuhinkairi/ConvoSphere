@@ -1,3 +1,4 @@
+'use client'
 import { ListFilter,  MessageSquareDiff, Search} from "lucide-react";
 import { Input } from "../ui/input";
 import ThemeSwitch from "../additional/ThemeSwitch";
@@ -5,9 +6,11 @@ import { conversations } from "@/app/dummy-data/db";
 import Conversation from "./conversation";
 import { UserButton } from "@clerk/nextjs";
 import UserListDialog from "./user-list-dialog";
+import { useConvexAuth } from "convex/react";
 
 const LeftPanel = () => {
-
+	// check the auth user
+	const {isAuthenticated} = useConvexAuth()
 	return (
 		<div className='w-1/4 border-gray-600 border-r'>
 			<div className='sticky top-0 bg-left-panel z-10'>
@@ -16,7 +19,9 @@ const LeftPanel = () => {
 					<UserButton />
 
 					<div className='flex items-center gap-3'>
-						<UserListDialog/> 
+						{/* todo -> move it to separate file and make it client side */}
+						{isAuthenticated&&<UserListDialog/>} 
+						 {/* <UserListDialog/> */}
 						<ThemeSwitch />
 					</div>
 				</div>
