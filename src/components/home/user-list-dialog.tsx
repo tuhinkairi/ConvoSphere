@@ -26,7 +26,7 @@ const UserListDialog = () => {
 	const [selectedImage, setSelectedImage] = useState<File | null>(null);
 	const [renderedImage, setRenderedImage] = useState("");
 	const imgRef = useRef<HTMLInputElement>(null);
-	const dialogCloseRef = useRef<HTMLInputElement>(null);
+	const dialogCloseRef = useRef<HTMLButtonElement>(null);
 
 	// Initialize hooks outside conditional blocks
 	const createConversation = useMutation(api.conversations.createConversation);
