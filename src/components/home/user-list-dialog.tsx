@@ -51,9 +51,12 @@ const UserListDialog = () => {
 				});
 			} else {
 				const postUrl = await generateUploadUrl();
+				// Check if `selectedImage` exists and set headers accordingly
+				const headers = selectedImage ? { "Content-Type": selectedImage.type } : undefined;
+
 				const result = await fetch(postUrl, {
 					method: "POST",
-					headers: { "Content-Type": selectedImage?.type, },
+					headers,
 					body: selectedImage,
 				});
 				const { storageId } = await result.json();
