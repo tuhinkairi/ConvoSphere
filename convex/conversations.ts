@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { error } from "console";
+
 
 
 
@@ -47,51 +47,51 @@ export const createConversation = mutation({
 });
 
 export const getMyConversations = query({
-	args:{
+	args: {
 
 	},
-	handler:async(ctx,args)=>{
+	handler: async (ctx, args) => {
 		// check the authorized user
-		const identitiy = await ctx.auth.getUserIdentity() 
-		if(!identitiy) throw new ConvexError("unauthorized");
+		const identitiy = await ctx.auth.getUserIdentity()
+		if (!identitiy) throw new ConvexError("unauthorized");
 
 		// fetch the user
-		const user = await ctx.db.query('users').withIndex("bytokenIdentifier",(q)=>q.eq("tokenIdentifier",identitiy.tokenIdentifier)
+		const user = await ctx.db.query('users').withIndex("bytokenIdentifier", (q) => q.eq("tokenIdentifier", identitiy.tokenIdentifier)
 		).unique()
 
 
 		if (!user) throw new ConvexError("user not found!")
-		
+
 		// collect the converstations
 		const conversations = await ctx.db.query("conversations").collect()
-		const myConversations = conversations.filter((e)=>{
+		const myConversations = conversations.filter((e) => {
 			return e.participants.includes(user._id)
 		})
 		// last message 
 		const converstationsWithDetails = await Promise.all(
-			myConversations.map(async (e)=>{
+			myConversations.map(async (e) => {
 				let userDetails = {}
 
 				if (!e.isGroup) {
 					// getting the id of anohter user
-					const otheruser = e.participants.find((id)=>id!==user._id)
+					const otheruser = e.participants.find((id) => id !== user._id)
 					// fetch the details based on the conversation
-					const profile = await ctx.db.query('users').filter((q)=>q.eq(q.field('_id'),otheruser)).take(1)
+					const profile = await ctx.db.query('users').filter((q) => q.eq(q.field('_id'), otheruser)).take(1)
 
 					userDetails = profile[0]
 				}
-				const lastMessage = await ctx.db.query('messages').filter((q)=> q.eq(q.field("conversation"),e._id)).order('desc').take(1) 
+				const lastMessage = await ctx.db.query('messages').filter((q) => q.eq(q.field("conversation"), e._id)).order('desc').take(1)
 
-				
-				return{
+
+				return {
 					...userDetails,
 					...e,
-					lastMessage:lastMessage[0]||null
+					lastMessage: lastMessage[0] || null
 				}
 			})
 		)
 		return converstationsWithDetails;
-		
+
 	}
 })
 

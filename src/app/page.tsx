@@ -1,11 +1,15 @@
 
+import LandingPage from "@/components/home/landingpage";
 import LeftPanel from "@/components/home/LeftPanel";
 import RightPanel from "@/components/home/RightPanel";
-import { SignedIn } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 export default function Home() {
 
 	return (<main className='h-screen'>
 		
+		<SignedOut>    
+            <LandingPage />
+          </SignedOut>
 		<SignedIn>
 
 		<div className='flex overflow-y-hidden h-full max-w-[1700px] mx-auto bg-left-panel '>
@@ -15,6 +19,7 @@ export default function Home() {
 			<RightPanel />
 		</div>
 		</SignedIn>
+
 	</main>
 	);
 }

@@ -4,8 +4,11 @@ import { ImageIcon, Users, VideoIcon } from "lucide-react";
 import { MessageSeenSvg } from "@/lib/svg";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useConversationStore } from "@/app/_store/chatStore";
 
 const Conversation = ({ conversation }: { conversation: any }) => {
+	const {selectedConversation,setSelectedConversation} = useConversationStore();
+	const activeConversation = selectedConversation?._id===conversation?._id
 	const me = useQuery(api.users.getMe)
 	const conversationImage = conversation.groupImage|| conversation.image;
 	const conversationName = conversation.groupName || conversation.name;
@@ -13,7 +16,7 @@ const Conversation = ({ conversation }: { conversation: any }) => {
 	const lastMessageType = lastMessage?.messageType;
 	return (
 		<>
-			<div className={`flex gap-2 items-center p-3 hover:bg-chat-hover cursor-pointer `}>
+			<div className={`flex gap-2 items-center p-3 hover:bg-chat-hover cursor-pointer ${activeConversation?"bg-gray-tertiary":""} `} onClick={()=>setSelectedConversation(conversation)}>
 				<Avatar className='border border-gray-900 overflow-visible relative'>
 					{conversation.isOnline && (
 						<div className='absolute top-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-foreground' />

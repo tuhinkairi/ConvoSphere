@@ -103,4 +103,24 @@ export const getMe = query({
 })
 
 
+export const getGroupMembers = query({
+	args: {
+		conversationId: v.id("conversations")
+	},
+	handler: async (ctx, args) => {
+		// check the authorized user
+		const identitiy = await ctx.auth.getUserIdentity()
+		if (!identitiy) throw new ConvexError("unauthorized");
+
+		// fetch the conversation matched id where we can get the group users then we filter from the users table to display on the members chart
+		const conversation = await ctx.db.query("conversations").filter((q)=>q.eq(q.field("_id"),args.conversationId)).first()
+		if (!conversation) {
+			throw new ConvexError('Conversation not found')
+		}
+        const user = await ctx.db.query('users').collect()
+
+        const groupUsers = user.filter((e)=>conversation.participants.includes(e._id))
+        return groupUsers;
+	}
+})
 
