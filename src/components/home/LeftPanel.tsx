@@ -2,15 +2,18 @@
 import { ListFilter,  MessageSquareDiff, Search} from "lucide-react";
 import { Input } from "../ui/input";
 import ThemeSwitch from "../additional/ThemeSwitch";
-import { conversations } from "@/app/dummy-data/db";
+// import { conversations } from "@/app/dummy-data/db";
 import Conversation from "./conversation";
 import { UserButton } from "@clerk/nextjs";
 import UserListDialog from "./user-list-dialog";
-import { useConvexAuth } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 const LeftPanel = () => {
 	// check the auth user
 	const {isAuthenticated} = useConvexAuth()
+	const conversations = useQuery(api.conversations.getMyConversations, isAuthenticated ? undefined:"skip") //skip the process if it is undefiened
+
 	return (
 		<div className='w-1/4 border-gray-600 border-r'>
 			<div className='sticky top-0 bg-left-panel z-10'>
@@ -46,7 +49,7 @@ const LeftPanel = () => {
 			<div className='my-3 flex flex-col gap-0 max-h-[80%] overflow-auto'>
 				{/* Conversations */}
         {
-          conversations.map((e) => (
+          conversations?.map((e) => (
             <Conversation key={e._id} conversation={e}/>
           ))
         }
