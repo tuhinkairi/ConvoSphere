@@ -43,7 +43,7 @@ const MessageInput = () => {
 		<div className='bg-gray-primary p-2 flex gap-4 items-center'>
 			<div className='relative flex gap-2 ml-2'>
 				{/* emoji section */}
-				<div ref={ref} onClick={() => setIsComponentVisible(true)} >
+				<div ref={ref!} onClick={() => setIsComponentVisible(true)} >
 					{isComponentVisible && <EmojiPicker theme={Theme.AUTO}
 						onEmojiClick={(e: any) => setMsgText(msgText + e.emoji)}
 						style={{ position: "absolute", bottom: "1.5rem", left: "1rem", zIndex: 50 }}

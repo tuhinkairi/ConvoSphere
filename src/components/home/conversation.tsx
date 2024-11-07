@@ -13,7 +13,7 @@ const Conversation = ({ conversation }: { conversation: any }) => {
 	const conversationImage = conversation.groupImage|| conversation.image;
 	const conversationName = conversation.groupName || conversation.name;
 	const lastMessage = conversation.lastMessage;
-	const lastMessageType = lastMessage?.messageType;
+	const lastMessageType = lastMessage?.contentType;
 	return (
 		<>
 			<div className={`flex gap-2 items-center p-3 hover:bg-chat-hover cursor-pointer ${activeConversation?"bg-gray-tertiary":""} `} onClick={()=>setSelectedConversation(conversation)}>
