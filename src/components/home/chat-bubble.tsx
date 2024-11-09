@@ -2,15 +2,17 @@ import { IMessage, useConversationStore } from "@/app/_store/chatStore";
 import { MessageSeenSvg } from "@/lib/svg";
 import ChatBubbleAvatar from "./chat-bubble-avatar";
 import DateIndicator from "./date-indicator";
+import ReactPlayer from "react-player";
+import Image from "next/image";
 
 type ChatBubbleProps = {
 	message: IMessage, //structure of the message
 	activeuser: any,
-	previousMessage : IMessage
+	previousMessage: IMessage
 
 }
 
-const ChatBubble = ({ message, activeuser,previousMessage }: ChatBubbleProps) => {
+const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) => {
 	// console.log(message)
 	const date = new Date(message._creationTime);
 	const hour = date.getHours().toString().padStart(2, "0"); //start with 0 if not 2 digit
@@ -29,7 +31,7 @@ const ChatBubble = ({ message, activeuser,previousMessage }: ChatBubbleProps) =>
 			{/* date show */}
 			<DateIndicator previousMessage={previousMessage} message={message} />
 			<div className="flex gap-1 w-2/3">
-			<ChatBubbleAvatar isMember={isMember} isGroup={isGroup} message={message}/>
+				<ChatBubbleAvatar isMember={isMember} isGroup={isGroup} message={message} />
 				<div className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
 					<OtherMessageIndicator />
 					<TextMessage message={message} />
@@ -38,13 +40,34 @@ const ChatBubble = ({ message, activeuser,previousMessage }: ChatBubbleProps) =>
 			</div>
 		</>)
 	}
+
+	// message show according to their type
+	const renderMessageContent = () => {
+
+		switch (message.contentType) {
+			case "text":
+				console.log('text')
+				return <TextMessage message={message} />;
+
+			case "image":
+				console.log('image')
+				return <ImageMessage message={message} handleClick={() => {
+				}} />;
+			case "video":
+				console.log('video')
+				return <VideoMessage message={message} />;
+			default:
+				return null;
+		}
+	};
 	return (<>
-	{/* date show */}
-	<DateIndicator previousMessage={previousMessage} message={message} />
+		{/* date show */}
+		<DateIndicator previousMessage={previousMessage} message={message} />
 		<div className="flex gap-1 w-2/3 ml-auto">
 			<div className={`flex flex-col z-20 max-w-fit ml-auto  px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
 				<SelfMessageIndicator />
-				<TextMessage message={message} />
+
+				{renderMessageContent()}
 				<MessageTime time={time} fromMe={fromMe} />
 			</div>
 		</div>
@@ -88,4 +111,25 @@ const MessageTime = ({ time, fromMe }: { time: string; fromMe: boolean }) => {
 			{time} {fromMe && <MessageSeenSvg />}
 		</p>
 	);
+};
+
+// message type showing components
+const ImageMessage = ({ message, handleClick }: { message: IMessage; handleClick: () => void }) => {
+
+	return (
+		<div className='w-[250px] h-[250px] m-2 relative'>
+			<Image
+				src={message.content}
+				fill
+				className='cursor-pointer object-cover rounded'
+				alt='image'
+				onClick={handleClick}
+			/>
+		</div>
+	);
+};
+
+
+const VideoMessage = ({ message }: { message: IMessage }) => {
+	return <ReactPlayer url={message.content} width='250px' height='250px' controls={true} light={true} />;
 };

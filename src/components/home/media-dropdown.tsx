@@ -48,12 +48,14 @@ const MediaDropdown = () => {
 				conversation: selectedConversation!._id,
 				sender: me!._id
 			})
-
 			setSelectedImage(null)
 
 		} catch (error) {
-			setIsLoading(false)
 			toast.error('failed to send')
+		}
+		finally{
+			
+			setIsLoading(false)
 		}
 
 	}
