@@ -4,6 +4,9 @@ import ChatBubbleAvatar from "./chat-bubble-avatar";
 import DateIndicator from "./date-indicator";
 import ReactPlayer from "react-player";
 import Image from "next/image";
+import { useState } from "react";
+import { Dialog, DialogTitle } from "@radix-ui/react-dialog";
+import { DialogContent, DialogDescription } from "../ui/dialog";
 
 type ChatBubbleProps = {
 	message: IMessage, //structure of the message
@@ -26,6 +29,8 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 	const fromMe = message.sender?._id === activeuser?._id;
 	const bgClass = fromMe ? "bg-green-chat" : "bg-white dark:bg-gray-primary"
 
+	// image pop-up box
+	const [open, setOpen] = useState(false)
 	if (!fromMe) {
 		return (<>
 			{/* date show */}
@@ -51,7 +56,7 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 
 			case "image":
 				console.log('image')
-				return <ImageMessage message={message} handleClick={() => {
+				return <ImageMessage message={message} handleClick={() => {setOpen(!open)
 				}} />;
 			case "video":
 				console.log('video')
@@ -68,6 +73,7 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 				<SelfMessageIndicator />
 
 				{renderMessageContent()}
+				{open && <ImagePopUp  src={message.content} open={open} onClose={() => setOpen(false)} />}
 				<MessageTime time={time} fromMe={fromMe} />
 			</div>
 		</div>
@@ -132,4 +138,26 @@ const ImageMessage = ({ message, handleClick }: { message: IMessage; handleClick
 
 const VideoMessage = ({ message }: { message: IMessage }) => {
 	return <ReactPlayer url={message.content} width='250px' height='250px' controls={true} light={true} />;
+};
+
+// image pop up component
+
+const ImagePopUp = ({ src, onClose, open }:{ open: boolean; src: string; onClose: () => void }) => {
+	console.log(open, src)
+	return (
+		<Dialog
+			open={open}
+			onOpenChange={(isOpen) => {
+				if (!isOpen) onClose();
+			}}
+		>
+			<DialogContent className='min-w-[750px]'>
+				
+				<DialogTitle className="hidden">pop up box</DialogTitle>
+				<DialogDescription className='relative h-[450px] flex justify-center'>
+					<Image src={src} fill className='rounded-lg object-contain' alt='image' />
+				</DialogDescription>
+			</DialogContent>
+		</Dialog>
+	);
 };
