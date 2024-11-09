@@ -1,5 +1,3 @@
-
-
 import { ImageIcon, Plus, Video } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
@@ -54,12 +52,41 @@ const MediaDropdown = () => {
 			toast.error('failed to send')
 		}
 		finally{
-			
 			setIsLoading(false)
 		}
 
 	}
-	const handleSendVideo = () => console.log('click')
+
+	// video sending
+	const handleSendVideo = async() => {
+		console.log('handel sending video....')
+		setIsLoading(true)
+		try {
+			// fetch the upload url
+			const postUrl = await generateUploadUrl()
+			// upload the image
+			const result = await fetch(postUrl, {
+				method: "POST", headers: {
+					'Content-Type': 'application/json',
+				}, body: selectedVideo
+			})
+			// save the new stroage id to db
+			const { storageId }  = await result.json()
+
+			await sendVideo({
+				vidID: storageId,
+				conversation: selectedConversation!._id,
+				sender: me!._id
+			})
+			setSelectedVideo(null)
+
+		} catch (error) {
+			toast.error('failed to send')
+		}
+		finally{
+			setIsLoading(false)
+		}
+	}
 	return (
 		<div className=''>
 			<input type="file" ref={imageInput} accept='image/*' onChange={(e) => setSelectedImage(e.target.files![0])} hidden />
