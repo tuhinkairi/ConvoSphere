@@ -31,20 +31,6 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 
 	// image pop-up box
 	const [open, setOpen] = useState(false)
-	if (!fromMe) {
-		return (<>
-			{/* date show */}
-			<DateIndicator previousMessage={previousMessage} message={message} />
-			<div className="flex gap-1 w-2/3">
-				<ChatBubbleAvatar isMember={isMember} isGroup={isGroup} message={message} />
-				<div className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
-					<OtherMessageIndicator />
-					<TextMessage message={message} />
-					<MessageTime time={time} fromMe={fromMe} />
-				</div>
-			</div>
-		</>)
-	}
 
 	// message show according to their type
 	const renderMessageContent = () => {
@@ -56,8 +42,7 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 
 			case "image":
 				console.log('image')
-				return <ImageMessage message={message} handleClick={() => {setOpen(!open)
-				}} />;
+				return <ImageMessage message={message} handleClick={() => {setOpen(!open)}} />;
 			case "video":
 				console.log('video')
 				return <VideoMessage message={message} />;
@@ -65,6 +50,25 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 				return null;
 		}
 	};
+	
+	if (!fromMe) {
+		return (<>
+			{/* date show */}
+			<DateIndicator previousMessage={previousMessage} message={message} />
+			<div className="flex gap-1 w-2/3">
+				<ChatBubbleAvatar isMember={isMember} isGroup={isGroup} message={message} />
+				<div className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
+					<OtherMessageIndicator />
+					{renderMessageContent()}
+					{open && <ImagePopUp  src={message.content} open={open} onClose={() => setOpen(false)} />}
+					<MessageTime time={time} fromMe={fromMe} />
+					<MessageTime time={time} fromMe={fromMe} />
+				</div>
+			</div>
+		</>)
+	}
+
+	
 	return (<>
 		{/* date show */}
 		<DateIndicator previousMessage={previousMessage} message={message} />
