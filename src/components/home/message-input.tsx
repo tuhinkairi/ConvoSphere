@@ -8,6 +8,7 @@ import { api } from "../../../convex/_generated/api";
 import toast from "react-hot-toast";
 import useComponentVisible from "@/hooks/useComponentVisible";
 import EmojiPicker, { Theme } from 'emoji-picker-react';
+import MediaDropdown from "./media-dropdown";
 
 const MessageInput = () => {
 	// message sending
@@ -43,7 +44,7 @@ const MessageInput = () => {
 		<div className='bg-gray-primary p-2 flex gap-4 items-center'>
 			<div className='relative flex gap-2 ml-2'>
 				{/* emoji section */}
-				<div ref={ref!} onClick={() => setIsComponentVisible(true)} >
+				<div ref={ref} onClick={() => setIsComponentVisible(true)} >
 					{isComponentVisible && <EmojiPicker theme={Theme.AUTO}
 						onEmojiClick={(e: any) => setMsgText(msgText + e.emoji)}
 						style={{ position: "absolute", bottom: "1.5rem", left: "1rem", zIndex: 50 }}
@@ -51,7 +52,7 @@ const MessageInput = () => {
 					<Laugh className='text-gray-600 dark:text-gray-400' />
 				</div>
 				{/* media section */}
-				<Plus className='text-gray-600 dark:text-gray-400' />
+				<MediaDropdown/>
 			</div>
 			<form onSubmit={handelSendMessage} className='w-full flex gap-3'>
 				<div className='flex-1'>

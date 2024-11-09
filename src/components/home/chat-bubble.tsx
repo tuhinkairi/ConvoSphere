@@ -11,7 +11,7 @@ type ChatBubbleProps = {
 }
 
 const ChatBubble = ({ message, activeuser,previousMessage }: ChatBubbleProps) => {
-	console.log(message)
+	// console.log(message)
 	const date = new Date(message._creationTime);
 	const hour = date.getHours().toString().padStart(2, "0"); //start with 0 if not 2 digit
 	const minute = date.getMinutes().toString().padStart(2, "0");
