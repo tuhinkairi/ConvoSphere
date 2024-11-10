@@ -18,6 +18,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { DialogClose } from "@radix-ui/react-dialog";
 import toast from "react-hot-toast";
+import { useConversationStore } from "@/app/_store/chatStore";
 
 const UserListDialog = () => {
 	const [selectedUsers, setSelectedUsers] = useState<Id<"users">[]>([]);
@@ -37,15 +38,17 @@ const UserListDialog = () => {
 	// fetching the user initiate the task
 	const me = useQuery(api.users.getMe);
 
+	const {setSelectedConversation} = useConversationStore()
 
 	// Handle conversation creation
 	const handelCreateConversation = async () => {
 		if (selectedUsers.length === 0) return;
+		let conversationId;
 		setIsLoading(true);
 		try {
 			const isGroup = selectedUsers.length > 1;
 			if (!isGroup) {
-				await createConversation({
+				conversationId = await createConversation({
 					participents: [...selectedUsers, me?._id!],
 					isGroup: false,
 				});
@@ -60,7 +63,7 @@ const UserListDialog = () => {
 					body: selectedImage,
 				});
 				const { storageId } = await result.json();
-				await createConversation({
+				conversationId=await createConversation({
 					participents: [...selectedUsers, me?._id!],
 					isGroup: true,
 					groupName,
@@ -73,8 +76,16 @@ const UserListDialog = () => {
 			setSelectedUsers([])
 			setSelectedImage(null)
 
-			// todo update the chat section next for show on the left pannel
-
+			// update the global state
+			const conversationName = isGroup?groupName: users?.find((user)=>user._id === selectedUsers[0])?.name
+			setSelectedConversation({
+				_id: conversationId,
+				participants: selectedUsers,
+				isGroup,
+				image: isGroup ? renderedImage : users?.find((user) => user._id === selectedUsers[0])?.image,
+				name: conversationName,
+				admin: me?._id!,
+			});
 		} catch (error) {
 			toast('opps something went wrong')
 			console.log(error);
