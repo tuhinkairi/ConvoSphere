@@ -14,7 +14,7 @@ const MessageContainer = () => {
 	// console.log(messages)
 	return (
 		<div className='relative p-3 flex-1 overflow-auto h-full bg-chat-tile-light dark:bg-chat-tile-dark'>
-			<div className='mx-2 md:mx-14 flex flex-col gap-3 h-full'>
+			<div className='mx-2 md:mx-14 flex flex-col gap-3 h-full mb-2'>
 				{messages?.map((msg,idx) => (
 					<div key={msg._id}>
 						<ChatBubble 
@@ -25,6 +25,7 @@ const MessageContainer = () => {
 						
 					</div>
 				))}
+				<div className="min-h-[0.1px]"></div>
 			</div>
 		</div>
 	);

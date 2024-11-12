@@ -4,6 +4,7 @@ import "./globals.css";
 import { Provider } from "./provider/Provider";
 import { Suspense } from "react";
 import toast, { Toaster } from 'react-hot-toast';
+import Loader from "@/components/additional/Loader";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,7 +32,7 @@ export default function RootLayout({
       <body 
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen overflow-hidden`}
       >
-        <Suspense fallback={<div className="w-screen h-screen flex items-center justify-center"><h1 className="text-5xl w-full text-center">loading...</h1></div>}>
+        <Suspense fallback={<Loader/>}>
 
         <Provider>
           

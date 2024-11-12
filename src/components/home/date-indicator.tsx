@@ -1,20 +1,22 @@
-import { IMessage } from '@/app/_store/chatStore'
+import { IMessage, useConversationStore, useKickMessageStore } from '@/app/_store/chatStore'
 import { getRelativeDateTime, isSameDay } from '@/lib/utils'
 import React from 'react'
-type DateIndicatorProps={
-    message :IMessage
-    previousMessage?:IMessage
+type DateIndicatorProps = {
+  message: IMessage
+  previousMessage?: IMessage
 }
-const DateIndicator=({message, previousMessage}:DateIndicatorProps)=> {
+const DateIndicator = ({ message, previousMessage }: DateIndicatorProps) => {
+ 
+
   return (
     <>
-     {!previousMessage || !isSameDay(previousMessage._creationTime, message._creationTime) ? (
-				<div className='flex justify-center'>
-					<p className='text-sm text-gray-500 dark:text-gray-400 mb-2 p-1 z-50 rounded-md bg-white dark:bg-gray-primary'>
-						{getRelativeDateTime(message, previousMessage)}
-					</p>
-				</div>
-			) : null}
+      {!previousMessage || !isSameDay(previousMessage._creationTime, message._creationTime) ? (
+        <div className='flex justify-center'>
+          <p className='text-sm text-gray-500 dark:text-gray-400 mb-2 p-1 z-50 rounded-md bg-white dark:bg-gray-primary'>
+            {getRelativeDateTime(message, previousMessage)}
+          </p>
+        </div>
+      ) : null}
     </>
   )
 }

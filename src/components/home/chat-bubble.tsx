@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Dialog, DialogTitle } from "@radix-ui/react-dialog";
 import { DialogContent, DialogDescription } from "../ui/dialog";
+import ChatAvatarActions from "./chat-avatar-actions";
 
 type ChatBubbleProps = {
 	message: IMessage, //structure of the message
@@ -57,11 +58,13 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 			<DateIndicator previousMessage={previousMessage} message={message} />
 			<div className="flex gap-1 w-2/3">
 				<ChatBubbleAvatar isMember={isMember} isGroup={isGroup} message={message} />
-				<div className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
+				<div className={`flex flex-col z-20 max-w-fit px-2 py-1 rounded-md shadow-md relative ${bgClass}`}>
 					<OtherMessageIndicator />
+					<span className="flex flex-row-reverse items-center">
+					{isGroup&&<ChatAvatarActions message={message} me={activeuser}/>}
 					{renderMessageContent()}
+					</span>
 					{open && <ImagePopUp  src={message.content} open={open} onClose={() => setOpen(false)} />}
-					<MessageTime time={time} fromMe={fromMe} />
 					<MessageTime time={time} fromMe={fromMe} />
 				</div>
 			</div>
