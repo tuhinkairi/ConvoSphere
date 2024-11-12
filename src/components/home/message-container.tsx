@@ -20,7 +20,7 @@ const MessageContainer = () => {
 						<ChatBubble 
 						message={msg}
 						activeuser={me}
-						previousMessage = {idx>0?messages[idx-1]:undefined}
+						previousMessage={idx>0?messages[idx-1]:undefined}
 						/>
 						
 					</div>

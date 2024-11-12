@@ -12,7 +12,7 @@ import ChatAvatarActions from "./chat-avatar-actions";
 type ChatBubbleProps = {
 	message: IMessage, //structure of the message
 	activeuser: any,
-	previousMessage: IMessage
+	previousMessage?:IMessage
 
 }
 
@@ -57,9 +57,10 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 			{/* date show */}
 			<DateIndicator previousMessage={previousMessage} message={message} />
 			<div className="flex gap-1 w-2/3">
-				<ChatBubbleAvatar isMember={isMember} isGroup={isGroup} message={message} />
+				<ChatBubbleAvatar isMember={isMember} isGroup={isGroup} message={message} me={activeuser} />
 				<div className={`flex flex-col z-20 max-w-fit px-2 py-1 rounded-md shadow-md relative ${bgClass}`}>
 					<OtherMessageIndicator />
+					{isGroup&& <h2 className="text-xs text-gray-500">{message.sender?.name}</h2>}
 					<span className="flex flex-row-reverse items-center">
 					{isGroup&&<ChatAvatarActions message={message} me={activeuser}/>}
 					{renderMessageContent()}
