@@ -8,14 +8,16 @@ type ChatBubbleAvatarProps = {
 	message: IMessage;
 	isMember: boolean;
 	isGroup: boolean | undefined;
-	me:any
+	me:any;
+	fromAI:any;
 };
 
-const ChatBubbleAvatar = ({ isGroup, isMember, message,me }: ChatBubbleAvatarProps) => {
+const ChatBubbleAvatar = ({ isGroup, isMember, message,me,fromAI }: ChatBubbleAvatarProps) => {
 	const createConversation = useMutation(api.conversations.createConversation)
 	const { setSelectedConversation } = useConversationStore();
 
-	if (!isGroup) return null;
+	if (!isGroup && !fromAI ) return null;
+
 	const handelCreateConversation = async () => {
 		try {
 
@@ -41,7 +43,7 @@ const ChatBubbleAvatar = ({ isGroup, isMember, message,me }: ChatBubbleAvatarPro
 	return (
 		<Avatar className='overflow-visible relative cursor-pointer'
 			onClick={handelCreateConversation}
-		>
+		> 
 			{message.sender.isOnline && isMember && (
 				<div className='absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full border-2 border-foreground' />
 			)}

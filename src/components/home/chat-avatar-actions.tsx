@@ -16,8 +16,10 @@ const ChatAvatarActions = ({ me, message }: ChatAvatarActionsProps) => {
 	const kickUser = useMutation(api.conversations.kickUser);
 
 	const isGroup = selectedConversation?.isGroup;
+	const fromAI = message.sender?.name==="ChatGPT"
 
 	const handleKickUser = async (e: React.MouseEvent) => {
+		if (fromAI) return
 		e.stopPropagation();
 		if (!selectedConversation) return;
 		try {

@@ -1,5 +1,5 @@
 'use client'
-import { ListFilter,  MessageSquareDiff, Search} from "lucide-react";
+import { ListFilter, MessageSquareDiff, Search } from "lucide-react";
 import { Input } from "../ui/input";
 import ThemeSwitch from "../additional/ThemeSwitch";
 // import { conversations } from "@/app/dummy-data/db";
@@ -8,14 +8,28 @@ import { UserButton } from "@clerk/nextjs";
 import UserListDialog from "./user-list-dialog";
 import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useEffect } from "react";
+import { useConversationStore } from "@/app/_store/chatStore";
 
 const LeftPanel = () => {
 	// check the auth user
-	const {isAuthenticated} = useConvexAuth()
-	const conversations = useQuery(api.conversations.getMyConversations, isAuthenticated ? undefined:"skip") //skip the process if it is undefiened
+	const { isAuthenticated } = useConvexAuth()
+	const conversations = useQuery(api.conversations.getMyConversations, isAuthenticated ? undefined : "skip") //skip the process if it is undefiened
+	const { isLoading } = useConvexAuth()
+
+	const { selectedConversation, setSelectedConversation } = useConversationStore();
+
+	useEffect(() => {
+		const conversationIds = conversations?.map((conversation) => conversation._id);
+		if (selectedConversation && conversationIds && !conversationIds.includes(selectedConversation._id)) {
+			setSelectedConversation(null);
+		}
+	}, [conversations, selectedConversation, setSelectedConversation]);
+
 
 	return (
 		<div className='w-1/4 border-gray-600 border-r'>
+			{!isLoading ? <>
 			<div className='sticky top-0 bg-left-panel z-10'>
 				{/* Header */}
 				<div className='flex justify-between bg-gray-primary p-3 items-center'>
@@ -23,8 +37,8 @@ const LeftPanel = () => {
 
 					<div className='flex items-center gap-3'>
 						{/* todo -> move it to separate file and make it client side */}
-						{isAuthenticated&&<UserListDialog/>} 
-						 {/* <UserListDialog/> */}
+						{isAuthenticated && <UserListDialog />}
+						{/* <UserListDialog/> */}
 						<ThemeSwitch />
 					</div>
 				</div>
@@ -34,7 +48,7 @@ const LeftPanel = () => {
 						<Search
 							className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 z-10'
 							size={18}
-						/>
+							/>
 						<Input
 							type='text'
 							placeholder='Search or start a new chat'
@@ -48,11 +62,11 @@ const LeftPanel = () => {
 			{/* Chat List */}
 			<div className='my-3 flex flex-col gap-0 max-h-[80%] overflow-auto'>
 				{/* Conversations */}
-        {
-          conversations?.map((e) => (
-            <Conversation key={e._id} conversation={e}/>
-          ))
-        }
+				{
+					conversations?.map((e) => (
+						<Conversation key={e._id} conversation={e} />
+					))
+				}
 
 				{conversations?.length === 0 && (
 					<>
@@ -63,6 +77,8 @@ const LeftPanel = () => {
 					</>
 				)}
 			</div>
+			</>
+			:null}
 		</div>
 	);
 };

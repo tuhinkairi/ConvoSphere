@@ -8,11 +8,12 @@ import { useState } from "react";
 import { Dialog, DialogTitle } from "@radix-ui/react-dialog";
 import { DialogContent, DialogDescription } from "../ui/dialog";
 import ChatAvatarActions from "./chat-avatar-actions";
+import { Bot } from "lucide-react";
 
 type ChatBubbleProps = {
 	message: IMessage, //structure of the message
 	activeuser: any,
-	previousMessage?:IMessage
+	previousMessage?: IMessage
 
 }
 
@@ -28,7 +29,8 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 	const isMember = selectedConversation?.participants.includes(message.sender?._id) || false;
 	const isGroup = selectedConversation?.isGroup;
 	const fromMe = message.sender?._id === activeuser?._id;
-	const bgClass = fromMe ? "bg-green-chat" : "bg-white dark:bg-gray-primary"
+	const fromAI = message.sender?.name === "ChatGPT";
+	const bgClass = fromMe ? "bg-green-chat" : !fromAI ? "bg-white dark:bg-gray-primary" : "bg-blue-500 text-white";
 
 	// image pop-up box
 	const [open, setOpen] = useState(false)
@@ -38,50 +40,54 @@ const ChatBubble = ({ message, activeuser, previousMessage }: ChatBubbleProps) =
 
 		switch (message.contentType) {
 			case "text":
-				console.log('text')
+				// console.log('text')
 				return <TextMessage message={message} />;
 
 			case "image":
-				console.log('image')
-				return <ImageMessage message={message} handleClick={() => {setOpen(!open)}} />;
+				// console.log('image')
+				return <ImageMessage message={message} handleClick={() => { setOpen(!open) }} />;
 			case "video":
-				console.log('video')
+				// console.log('video')
 				return <VideoMessage message={message} />;
 			default:
 				return null;
 		}
 	};
-	
+
 	if (!fromMe) {
 		return (<>
 			{/* date show */}
 			<DateIndicator previousMessage={previousMessage} message={message} />
 			<div className="flex gap-1 w-2/3">
-				<ChatBubbleAvatar isMember={isMember} isGroup={isGroup} message={message} me={activeuser} />
+				<ChatBubbleAvatar fromAI={fromAI} isMember={isMember} isGroup={isGroup} message={message} me={activeuser} />
 				<div className={`flex flex-col z-20 max-w-fit px-2 py-1 rounded-md shadow-md relative ${bgClass}`}>
-					<OtherMessageIndicator />
-					{isGroup&& <h2 className="text-xs text-gray-500">{message.sender?.name}</h2>}
-					<span className="flex flex-row-reverse items-center">
-					{isGroup&&<ChatAvatarActions message={message} me={activeuser}/>}
-					{renderMessageContent()}
+
+					{!fromAI && <OtherMessageIndicator />}
+					{fromAI && <Bot size={16} className='absolute bottom-[2px] left-2' />}
+
+					<span className="flex justify-between gap-2 items-center">
+						{!isGroup && fromAI && <h2 className={"text-xs text-white"}>{message.sender?.name}</h2> }
+					{ isGroup && <h2 className={`text-xs  ${fromAI? 'text-white':'text-gray-500'}`}>{message.sender?.name}</h2>}
+						{!fromAI &&  isGroup && <ChatAvatarActions message={message} me={activeuser} />}
 					</span>
-					{open && <ImagePopUp  src={message.content} open={open} onClose={() => setOpen(false)} />}
+						{renderMessageContent()}
+					{open && <ImagePopUp src={message.content} open={open} onClose={() => setOpen(false)} />}
 					<MessageTime time={time} fromMe={fromMe} />
 				</div>
 			</div>
 		</>)
 	}
 
-	
+
 	return (<>
 		{/* date show */}
 		<DateIndicator previousMessage={previousMessage} message={message} />
 		<div className="flex gap-1 w-2/3 ml-auto">
 			<div className={`flex flex-col z-20 max-w-fit ml-auto  px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
-				<SelfMessageIndicator />
 
+				<SelfMessageIndicator />
 				{renderMessageContent()}
-				{open && <ImagePopUp  src={message.content} open={open} onClose={() => setOpen(false)} />}
+				{open && <ImagePopUp src={message.content} open={open} onClose={() => setOpen(false)} />}
 				<MessageTime time={time} fromMe={fromMe} />
 			</div>
 		</div>
@@ -151,7 +157,7 @@ const VideoMessage = ({ message }: { message: IMessage }) => {
 
 // image pop up component
 
-const ImagePopUp = ({ src, onClose, open }:{ open: boolean; src: string; onClose: () => void }) => {
+const ImagePopUp = ({ src, onClose, open }: { open: boolean; src: string; onClose: () => void }) => {
 	console.log(open, src)
 	return (
 		<Dialog
@@ -161,7 +167,7 @@ const ImagePopUp = ({ src, onClose, open }:{ open: boolean; src: string; onClose
 			}}
 		>
 			<DialogContent className='min-w-[750px]'>
-				
+
 				<DialogTitle className="hidden">pop up box</DialogTitle>
 				<DialogDescription className='relative h-[450px] flex justify-center'>
 					<Image src={src} fill className='rounded-lg object-contain' alt='image' />

@@ -21,7 +21,7 @@ const Conversation = ({ conversation }: { conversation: any }) => {
 					{conversation.isOnline && (
 						<div className='absolute top-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-foreground' />
 					)}
-					<AvatarImage src={conversationImage || "/placeholder.png"} className='object-cover rounded-full' />
+					<AvatarImage src={conversationImage || "./placeholder.png"} className='object-cover rounded-full' />
 					<AvatarFallback>
 						<div className='animate-pulse bg-gray-tertiary w-full h-full rounded-full'></div>
 					</AvatarFallback>

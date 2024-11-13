@@ -6,14 +6,21 @@ import MessageContainer from "./message-container";
 import ChatPlaceHolder from "@/components/home/chat-placeholder";
 import GroupMembersDialog from "./group-members-dialog";
 import { useConversationStore } from "@/app/_store/chatStore";
+import { useConvexAuth } from "convex/react";
+import Loader from "../additional/Loader";
 
 const RightPanel = () => {
+	const {isLoading} = useConvexAuth()
+
 	const {selectedConversation,setSelectedConversation} = useConversationStore();
 	if (!selectedConversation) return <ChatPlaceHolder />;
 
 	const conversationName = selectedConversation.groupName||selectedConversation.name;
 	const conversationImage = selectedConversation.groupImage||selectedConversation.image;
 
+	if (isLoading) {
+		return (<Loader/>)
+	}
 	return (
 		<div className='w-3/4 flex flex-col'>
 			<div className='w-full sticky top-0 z-50'>
