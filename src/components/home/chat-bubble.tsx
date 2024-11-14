@@ -151,7 +151,7 @@ const ImageMessage = ({ message, handleClick }: { message: IMessage; handleClick
 
 
 const VideoMessage = ({ message }: { message: IMessage }) => {
-	console.log('video')
+	// console.log('video')
 	return <ReactPlayer url={message.content} width='250px' height='250px' controls={true} light={true} />;
 };
 

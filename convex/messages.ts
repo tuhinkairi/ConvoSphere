@@ -31,16 +31,22 @@ export const sendTextMessages = mutation({
 			contentType: "text",
 		})
 
-		//add chat-gpt 
-		if(args.content.startsWith('@gpt')){
-			await ctx.scheduler.runAfter(0,api.openai.chat,{
+		//add ai 
+		if(args.content.startsWith('@chat')){
+			await ctx.scheduler.runAfter(0,api.ai.chat,{
+				messageBody : args.content,
+				conversation : args.conversation
+			})
+		}
+		if(args.content.startsWith('@image')){
+			await ctx.scheduler.runAfter(0,api.ai.Image,{
 				messageBody : args.content,
 				conversation : args.conversation
 			})
 		}
 	} 
 })
-
+// ai message update
 export const sendChatGPTMessage = mutation({
 	args: {
 		content: v.string(),
