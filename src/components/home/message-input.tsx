@@ -25,10 +25,12 @@ const MessageInput = () => {
 	// handelfunctions
 	const handelSendMessage = async (e: React.FormEvent) => {
 		e.preventDefault()
-		try {
-			// sending the text data
-			await sendTextMsg({
-				sender: user!._id,
+		if(msgText.length>0){
+
+			try {
+				// sending the text data
+				await sendTextMsg({
+					sender: user!._id,
 				content: msgText,
 				conversation: selectedConversation!._id,
 			})
@@ -39,6 +41,7 @@ const MessageInput = () => {
 			console.log(err)
 		}
 	}
+}
 
 	return (
 		<div className='bg-gray-primary p-2 flex gap-4 items-center'>
