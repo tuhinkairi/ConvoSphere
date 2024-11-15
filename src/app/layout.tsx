@@ -33,9 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen overflow-hidden`}
       >
         <Suspense fallback={<Loader/>}>
-
         <Provider>
-          
           {children}
           <Toaster />
         </Provider>

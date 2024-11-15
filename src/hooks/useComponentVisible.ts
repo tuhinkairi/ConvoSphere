@@ -8,7 +8,7 @@ interface ComponentVisibleHook {
 
 export default function useComponentVisible(initialIsVisible: boolean): ComponentVisibleHook {
     const [isComponentVisible, setIsComponentVisible] = React.useState(initialIsVisible);
-    const ref = useRef<HTMLElement>(null);
+    const ref = useRef<HTMLDivElement>(null);
 
     const handleClickOutside = (event: MouseEvent) => {
         if (ref.current && !ref.current.contains(event.target as Node)) {
