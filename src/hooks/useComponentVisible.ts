@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 interface ComponentVisibleHook {
-    ref: React.RefObject<HTMLElement>;
+    ref: React.RefObject<HTMLDivElement>;
     isComponentVisible: boolean;
     setIsComponentVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
