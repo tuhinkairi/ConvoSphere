@@ -8,7 +8,7 @@ import { LogInIcon } from 'lucide-react'
 
 function LandingPage() {
   return (
-    <main className='h-screen overflow-hidden content-center text-center  bg-emerald-500'>
+    <main className='h-screen overflow-hidden content-center text-center  bg-emerald-500 text-white'>
   <Navbar/>
   <div className='flex flex-col gap-6 capitalize w-3/5 mx-auto text-wrap '>
     <h1 className='text-5xl'>Welcome to WhatsApp</h1>
