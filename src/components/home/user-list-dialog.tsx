@@ -28,7 +28,9 @@ const UserListDialog = () => {
 	const [renderedImage, setRenderedImage] = useState("");
 	const imgRef = useRef<HTMLInputElement>(null);
 	const dialogCloseRef = useRef<HTMLButtonElement>(null);
-
+	// hover section
+	const [open, setOpen] = useState(false)
+	// console.log("chat",open)
 	// Initialize hooks outside conditional blocks
 	const createConversation = useMutation(api.conversations.createConversation);
 	const generateUploadUrl = useMutation(api.conversations.generateUploadUrl);
@@ -38,7 +40,7 @@ const UserListDialog = () => {
 	// fetching the user initiate the task
 	const me = useQuery(api.users.getMe);
 
-	const {setSelectedConversation} = useConversationStore()
+	const { setSelectedConversation } = useConversationStore()
 
 	// Handle conversation creation
 	const handelCreateConversation = async () => {
@@ -63,7 +65,7 @@ const UserListDialog = () => {
 					body: selectedImage,
 				});
 				const { storageId } = await result.json();
-				conversationId=await createConversation({
+				conversationId = await createConversation({
 					participents: [...selectedUsers, me?._id!],
 					isGroup: true,
 					groupName,
@@ -77,7 +79,7 @@ const UserListDialog = () => {
 			setSelectedImage(null)
 
 			// update the global state
-			const conversationName = isGroup?groupName: users?.find((user)=>user._id === selectedUsers[0])?.name
+			const conversationName = isGroup ? groupName : users?.find((user) => user._id === selectedUsers[0])?.name
 			setSelectedConversation({
 				_id: conversationId,
 				participants: selectedUsers,
@@ -103,9 +105,14 @@ const UserListDialog = () => {
 
 	return (
 		<Dialog>
-			<DialogTrigger>
-				<MessageSquareDiff size={20} />
-			</DialogTrigger>
+			{/* todo add a hover section */}
+			<div className="w-fit h-fit relative" onMouseEnter={() => setOpen(!open)}  onMouseLeave={() => setOpen(!open)} >
+				<DialogTrigger>
+					<MessageSquareDiff size={20} />
+				</DialogTrigger>
+				<div className={`absolute -bottom-6 right-0 z-50 text-xs whitespace-nowrap bg-zinc-900 p-1 rounded  text-white ${open ? "flex" : "hidden"}`}>New Chat</div>
+			</div>
+
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>USERS</DialogTitle>
@@ -128,7 +135,7 @@ const UserListDialog = () => {
 					</>
 				)}
 				<div className="flex flex-col gap-3 overflow-auto max-h-60">
-					{users?.filter(user=> user.name !== "Deleted").map((user) => (
+					{users?.filter(user => user.name !== "Deleted").map((user) => (
 						<div
 							key={user._id}
 							className={`flex gap-3 items-center p-2 rounded cursor-pointer active:scale-95 
