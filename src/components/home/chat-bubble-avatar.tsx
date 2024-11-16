@@ -44,7 +44,7 @@ const ChatBubbleAvatar = ({ isGroup, isMember, message,me,fromAI }: ChatBubbleAv
 		<Avatar className='overflow-visible relative cursor-pointer'
 			onClick={handelCreateConversation}
 		> 
-			{message.sender.isOnline && isMember && (
+			{message.sender?.isOnline && isMember && (
 				<div className='absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full border-2 border-foreground' />
 			)}
 			<AvatarImage src={message.sender?.image} className='rounded-full object-cover w-8 h-8' />

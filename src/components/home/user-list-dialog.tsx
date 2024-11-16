@@ -128,7 +128,7 @@ const UserListDialog = () => {
 					</>
 				)}
 				<div className="flex flex-col gap-3 overflow-auto max-h-60">
-					{users?.map((user) => (
+					{users?.filter(user=> user.name !== "Deleted").map((user) => (
 						<div
 							key={user._id}
 							className={`flex gap-3 items-center p-2 rounded cursor-pointer active:scale-95 

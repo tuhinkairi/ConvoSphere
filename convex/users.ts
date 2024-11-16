@@ -20,6 +20,19 @@ export const createUser = internalMutation({
         });
     },
 });
+export const deleteUser = internalMutation({
+    args: {
+        tokenIdentifier: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db.query("users").withIndex('bytokenIdentifier',(q)=>q.eq('tokenIdentifier',args.tokenIdentifier)).unique()
+        await ctx.db.patch(user?._id!,{
+            isOnline: false,
+            image:"https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg",
+            name:"Deleted"
+        });
+    },
+});
 
 
 // session removed logoff
@@ -30,7 +43,6 @@ export const setUserOffline = internalMutation({
     handler: async (ctx, args) => {
         const user = await ctx.db.query("users").withIndex('bytokenIdentifier',(q)=>q.eq('tokenIdentifier',args.tokenIdentifier)).unique()
         
-        alert(user)
         if (!user) {
             throw new ConvexError("User not found!");
         }
