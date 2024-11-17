@@ -1,14 +1,34 @@
 "use client"
-import { SignInButton } from "@clerk/nextjs";
+import { downloadResume } from "@/lib/utils";
+import { SignInButton, useClerk } from "@clerk/nextjs";
 import { LinkedInLogoIcon } from "@radix-ui/react-icons";
-import { LogInIcon } from "lucide-react";
+import { ChartBarIcon, LogInIcon, MessageCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
+    const user = useClerk()
     const [navbarOpen, setNavbarOpen] = useState(false);
     const [flyer, setFlyer] = useState(false);
     const [flyerTwo, setFlyerTwo] = useState(false);
+    // download resume 
+    // const handleClick = async () => {
+    //     const response = await fetch('/api/download');
+
+    //     if (response.status !== 200) {
+    //         console.error(response.status, response.statusText);
+    //         toast.error('Opps Someting Went Wrong!')
+    //     }
+
+    //     const blob = await response.blob();
+    //     const url = window.URL.createObjectURL(blob);
+    //     const link = document.createElement('a');
+    //     link.href = url;
+    //     link.download = 'Tuhin_Kairi_Resume.pdf';
+    //     link.click();
+    //     toast.success("Thank you for downloading my resume")
+    // };
     return (
         <header className="fixed top-0 w-full clearNav z-50 text-sm">
             <div className="max-w-5xl mx-auto flex flex-wrap p-5 flex-col md:flex-row">
@@ -56,9 +76,9 @@ const Navbar = () => {
                         <Link href='/about' className="font-semibold hover:underline underline-offset-4 mx-7">
                             About
                         </Link>
-                        <Link href='/contact' className="font-semibold hover:underline underline-offset-4 mx-7">
-                            Contact
-                        </Link>
+                        <button onClick={async()=>await downloadResume()} className="font-semibold hover:underline underline-offset-4 mx-7">
+                            Resume
+                        </button>
                     </div>
                     <Link
                         href="https://www.linkedin.com/in/tuhinkairi/"
@@ -66,7 +86,7 @@ const Navbar = () => {
                         target="_blank"
                         className="invisible md:visible"
                     >
-                        <LinkedInLogoIcon className="w-5 h-5"/>
+                        <LinkedInLogoIcon className="w-5 h-5" />
                     </Link>
 
                     <Link
@@ -95,9 +115,16 @@ const Navbar = () => {
                             ></path>
                         </svg>
                     </Link>
-                    <SignInButton>
-                        <LogInIcon className="ml-5 cursor-pointer" />
-                    </SignInButton>
+                    {!user ? (
+
+                        <SignInButton>
+                            <LogInIcon className="ml-5 cursor-pointer" />
+                        </SignInButton>) :
+
+                        <Link href={'/'} className="pl-6">
+                            <MessageCircleIcon />
+                        </Link>
+                    }
                 </div>
             </div>
         </header>

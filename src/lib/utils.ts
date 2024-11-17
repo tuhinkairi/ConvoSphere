@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
+import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -95,4 +96,22 @@ export function randomID(len: number) {
 		result += chars.charAt(Math.floor(Math.random() * maxPos));
 	}
 	return result;
+}
+
+export const downloadResume=async()=>{
+	const response = await fetch('/api/download');
+
+        try {
+			
+			const blob = await response.blob();
+			const url = window.URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = 'Tuhin_Kairi_Resume.pdf';
+			link.click();
+			toast.success("Thank you for downloading my resume")
+		} catch (error) {
+            console.error(error);
+            toast.error('Opps Someting Went Wrong!')
+        }
 }

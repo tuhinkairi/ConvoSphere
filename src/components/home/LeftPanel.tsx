@@ -1,5 +1,5 @@
 'use client'
-import { ListFilter, MessageSquareDiff, Search } from "lucide-react";
+import { File, FileJson, ListFilter, MessageSquareDiff, Search } from "lucide-react";
 import { Input } from "../ui/input";
 import ThemeSwitch from "../additional/ThemeSwitch";
 // import { conversations } from "@/app/dummy-data/db";
@@ -8,11 +8,14 @@ import { UserButton } from "@clerk/nextjs";
 import UserListDialog from "./user-list-dialog";
 import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useConversationStore } from "@/app/_store/chatStore";
 import BugDialog from "./bug-dialog";
+import { downloadResume } from "@/lib/utils";
 
 const LeftPanel = () => {
+	const [open, setOpen] = useState(false)
+
 	// check the auth user
 	const { isAuthenticated } = useConvexAuth()
 	const conversations = useQuery(api.conversations.getMyConversations, isAuthenticated ? undefined : "skip") //skip the process if it is undefiened
@@ -31,19 +34,24 @@ const LeftPanel = () => {
 	return (
 		<div className='w-1/4 border-gray-600 border-r relative'>
 			{!isLoading ? <>
-			<div className="absolute bottom-6 right-8">
-				{isAuthenticated && <UserListDialog />}
-			</div>
+				<div className="absolute bottom-6 right-8">
+					{isAuthenticated && <UserListDialog />}
+				</div>
 
 				<div className='sticky top-0 bg-left-panel z-10'>
 					{/* Header */}
 					<div className='flex justify-between bg-gray-primary p-3 items-center'>
 						<UserButton />
 
-						<div className='flex items-center gap-3'>
-							{/* todo -> move it to separate file and make it client side */}
-							{/* <UserListDialog/> */}
-							<BugDialog/>
+						<div className='flex items-center gap-4'>
+							<div className="w-fit h-fit relative flex items-center" onMouseEnter={() => setOpen(!open)} onMouseLeave={() => setOpen(!open)} >
+								<button onClick={async()=>await downloadResume()}>
+
+									<File size={20} />
+								</button>
+								<div className={`absolute -bottom-6 right-0 z-50 text-xs whitespace-nowrap bg-zinc-900 p-1 rounded  text-white ${open ? "flex" : "hidden"}`}>{"Tuhin's Resume"}</div>
+							</div>
+							<BugDialog />
 							<ThemeSwitch />
 						</div>
 					</div>
