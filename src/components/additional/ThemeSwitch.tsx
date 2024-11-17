@@ -11,10 +11,9 @@ import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
 const ThemeSwitch = () => {
-	const [open, setOpen] = useState(false)
 
 	const { setTheme } = useTheme();
-
+	const [open, setOpen] = useState(false)
 	return (
 		<DropdownMenu>
 			<div className="w-fit h-fit relative" onMouseEnter={() => setOpen(!open)} onClick={() => setOpen(!open)} onMouseLeave={() => setOpen(!open)} >
