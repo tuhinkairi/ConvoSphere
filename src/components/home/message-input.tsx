@@ -11,6 +11,8 @@ import EmojiPicker, { Theme } from 'emoji-picker-react';
 import MediaDropdown from "./media-dropdown";
 
 const MessageInput = () => {
+	const [open, setOpen] = useState(false)
+
 	// message sending
 	const [msgText, setMsgText] = useState("");
 	const { selectedConversation } = useConversationStore()
@@ -67,8 +69,9 @@ const MessageInput = () => {
 						onChange={(e) => setMsgText(e.target.value)}
 					/>
 				</div>
-				<div className='mr-4 flex items-center gap-3'>
+				<div className='mr-4 flex items-center gap-3 border border-zinc-500 rounded-md '>
 					{msgText.length > 0 ? (
+						<div className="w-fit h-fit relative" onMouseEnter={() => setOpen(!open)} onClick={() => setOpen(!open)} onMouseLeave={() => setOpen(!open)} >
 						<Button
 							type='submit'
 							size={"sm"}
@@ -76,6 +79,8 @@ const MessageInput = () => {
 						>
 							<Send />
 						</Button>
+						<div className={`absolute -top-8 right-2 z-50 text-xs whitespace-nowrap bg-zinc-900 p-1 rounded  text-white ${open ? "flex" : "hidden"}`}>Send</div>
+						</div>
 					) : (
 						<Button
 							type='submit'

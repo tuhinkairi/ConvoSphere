@@ -22,8 +22,13 @@ export default defineSchema({
 		sender:v.string(),
 		content: v.string(),
 		contentType: v.union(v.literal("text"), v.literal("image"),v.literal("video")),
-	}).index("byconversation",["conversation"])
-	
+	}).index("byconversation",["conversation"]),
+
+	report: defineTable({
+		user: v.id("users"),
+		sender:v.string(),
+		content: v.string(),
+	}).index("byconversation",["user"])
 })
 
 
