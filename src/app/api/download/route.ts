@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import * as path from 'path';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+export default async function POST(request: NextApiRequest, response: NextApiResponse) {
   if (request.method !== 'GET') {
     return response.status(405).end();
   }
