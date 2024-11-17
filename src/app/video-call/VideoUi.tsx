@@ -1,5 +1,6 @@
+import Loader from "@/components/additional/Loader";
 import { randomID } from "@/lib/utils";
-import { useClerk } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 
 export function getUrlParams(url = window.location.href) {
@@ -9,8 +10,11 @@ export function getUrlParams(url = window.location.href) {
 
 export default function VideoUIKit() {
 	const roomID = getUrlParams().get("roomID") || randomID(5);
-	const { user } = useClerk();
+	const { isLoaded,user } = useUser();
 
+	if (!isLoaded) {
+		return <Loader/>
+	}
 	let myMeeting = (element: HTMLDivElement) => {
 		const initMeeting = async () => {
 			const res = await fetch(`/api/zegocloud?userID=${user?.id}`);
