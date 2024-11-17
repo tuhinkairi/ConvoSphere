@@ -2,13 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
 
-export default async function POST(request: NextApiRequest, response: NextApiResponse) {
+export default async function POST(request: NextApiRequest, res: NextApiResponse) {
   if (request.method !== 'GET') {
-    return response.status(405).end();
+    return res.status(405).end();
   }
 
-  response.setHeader('Content-Disposition', 'attachment; filename=Tuhin_Kairi_Resume.pdf');
-  response.setHeader('Content-Type', 'application/text');
+  res.setHeader('Content-Disposition', 'attachment; filename=Tuhin_Kairi_Resume.pdf');
+  res.setHeader('Content-Type', 'application/text');
 
   const filePath = path.join(process.cwd(), 'public', 'Tuhin_Kairi_Resume.pdf');
 
