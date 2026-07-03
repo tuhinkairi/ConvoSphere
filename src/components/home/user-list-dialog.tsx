@@ -107,8 +107,13 @@ const UserListDialog = () => {
 	return (
 		<Dialog>
 			<div className="w-fit h-fit relative" onMouseEnter={() => setOpen(!open)} onMouseLeave={() => setOpen(!open)} >
-				<DialogTrigger>
-					<Plus size={40} className="bg-green-primary hover:bg-green-secondary rounded-full"/>
+				<DialogTrigger asChild>
+					<button
+						type="button"
+						className="flex items-center justify-center w-10 h-10 rounded-full bg-green-primary hover:bg-teal-700 transition-colors"
+					>
+						<Plus size={24} className="text-white" />
+					</button>
 				</DialogTrigger>
 				<div className={`absolute -bottom-6 right-0 z-50 text-xs whitespace-nowrap bg-zinc-900 p-1 rounded  text-white ${open ? "flex" : "hidden"}`}>New Chat</div>
 			</div>

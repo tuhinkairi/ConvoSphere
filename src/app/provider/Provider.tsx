@@ -8,7 +8,7 @@ export function Provider({ children }: { children: ReactNode }) {
         <ConvexClientProvider>
             <ThemeProvider
                 attribute="class"
-                defaultTheme="light"
+                defaultTheme="dark"
                 enableSystem
                 disableTransitionOnChange
             >
