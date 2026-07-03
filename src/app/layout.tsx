@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Provider } from "./provider/Provider";
@@ -29,15 +30,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body 
+      <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen overflow-x-hidden`}
       >
-        <Suspense fallback={<Loader/>}>
-        <Provider>
-          {children}
-          <Toaster />
-        </Provider>
-        </Suspense>
+        <ClerkProvider dynamic>
+          <Suspense fallback={<Loader />}>
+            <Provider>
+              {children}
+              <Toaster />
+            </Provider>
+          </Suspense>
+        </ClerkProvider>
       </body>
     </html>
   );
